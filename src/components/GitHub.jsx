@@ -1,0 +1,247 @@
+import React, { useState, useEffect } from 'react';
+import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolder, FaCircle } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+
+const GITHUB_USERNAME = 'GilbertBaraza';
+
+// Fallback Mock Data in case of rate limits or network issues
+const fallbackProfile = {
+  avatar_url: '/profile.png', // Gilbert's actual profile pic
+  name: 'Gilbert Baraza',
+  bio: 'Computer Science Student | Backend Developer | AI & Web Development',
+  public_repos: 25,
+  followers: 12,
+  following: 15,
+  html_url: `https://github.com/${GITHUB_USERNAME}`
+};
+
+const fallbackRepos = [
+  {
+    name: 'AgriGuard-AI',
+    description: 'AI-powered agriculture assistant for crop disease detection and smart farming recommendations.',
+    language: 'Python',
+    stargazers_count: 5,
+    forks_count: 2,
+    html_url: `https://github.com/${GITHUB_USERNAME}/AgriGuard-AI`,
+    languageColor: '#3576AB'
+  },
+  {
+    name: 'Adaa-AI-Planner',
+    description: 'AI planning assistant that converts user prompts into structured coding implementation plans.',
+    language: 'JavaScript',
+    stargazers_count: 4,
+    forks_count: 1,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Adaa-AI-Planner`,
+    languageColor: '#f1e05a'
+  },
+  {
+    name: 'Student-Management-System',
+    description: 'Complete student record dashboard and CRUD platform designed with Python Django.',
+    language: 'Python',
+    stargazers_count: 3,
+    forks_count: 1,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Student-Management-System`,
+    languageColor: '#3576AB'
+  },
+  {
+    name: 'portfolio',
+    description: 'The frontend source code of Gilbert Baraza\'s premium personal portfolio web application.',
+    language: 'JavaScript',
+    stargazers_count: 2,
+    forks_count: 0,
+    html_url: `https://github.com/${GITHUB_USERNAME}/portfolio`,
+    languageColor: '#f1e05a'
+  }
+];
+
+const languageColors = {
+  python: '#3576AB',
+  javascript: '#f1e05a',
+  html: '#e34f26',
+  css: '#563d7c',
+  typescript: '#3178c6',
+  vue: '#41b883',
+  shell: '#89e051'
+};
+
+const GitHub = () => {
+  const [profile, setProfile] = useState(null);
+  const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchGitHubData = async () => {
+      try {
+        setLoading(true);
+        // Fetch profile
+        const profileRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+        if (!profileRes.ok) throw new Error('Failed to fetch profile');
+        const profileData = await profileRes.json();
+        
+        // Fetch repos
+        const reposRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
+        if (!reposRes.ok) throw new Error('Failed to fetch repos');
+        const reposData = await reposRes.json();
+
+        setProfile(profileData);
+        // Filter out fork repositories if they are fork to showcase original content, or take top 4
+        const originalRepos = reposData
+          .filter(repo => !repo.fork)
+          .slice(0, 4)
+          .map(repo => ({
+            ...repo,
+            languageColor: languageColors[repo.language?.toLowerCase()] || '#858585'
+          }));
+
+        setRepos(originalRepos.length > 0 ? originalRepos : reposData.slice(0, 4));
+        setError(false);
+      } catch (err) {
+        console.warn('GitHub API Fetch failed. Using fallback portfolio details. Error:', err.message);
+        setProfile(fallbackProfile);
+        setRepos(fallbackRepos);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGitHubData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-20 flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm font-mono text-mutedLight dark:text-mutedDark">Syncing with GitHub API...</p>
+      </section>
+    );
+  }
+
+  return (
+    <section id="github" className="py-20 bg-secondary-light/5 dark:bg-bgDark/40">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Section Heading */}
+        <div className="text-center max-w-xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-extrabold font-outfit text-secondary dark:text-textDark">
+            GitHub Activities
+          </h2>
+          <div className="w-16 h-1.5 bg-primary dark:bg-accent mx-auto mt-4 rounded-full"></div>
+          <p className="mt-4 text-mutedLight dark:text-mutedDark">
+            Live synchronization with my GitHub profile, pinned repositories, and statistics.
+          </p>
+        </div>
+
+        {/* Profile Card Summary */}
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          {/* Left Column: Profile Card */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-4 glass-card p-6 rounded-3xl border border-secondary-light/10 dark:border-white/5 shadow-lg flex flex-col justify-between text-center lg:text-left"
+          >
+            <div className="flex flex-col items-center lg:items-start space-y-4">
+              <img
+                src={profile?.avatar_url}
+                alt={profile?.name || GITHUB_USERNAME}
+                className="w-24 h-24 rounded-full border-4 border-primary/20 dark:border-accent/20 object-cover"
+              />
+              <div>
+                <h3 className="text-xl font-bold font-outfit text-secondary dark:text-textDark">
+                  {profile?.name || GITHUB_USERNAME}
+                </h3>
+                <a 
+                  href={profile?.html_url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-sm font-mono text-primary dark:text-accent hover:underline flex items-center justify-center lg:justify-start space-x-1.5 mt-1"
+                >
+                  <FaGithub />
+                  <span>@{GITHUB_USERNAME}</span>
+                </a>
+              </div>
+              <p className="text-xs md:text-sm text-mutedLight dark:text-mutedDark leading-relaxed">
+                {profile?.bio || fallbackProfile.bio}
+              </p>
+            </div>
+
+            {/* Profile Statistics */}
+            <div className="grid grid-cols-3 gap-2 border-t border-secondary-light/10 dark:border-white/5 pt-6 mt-6">
+              <div className="flex flex-col items-center">
+                <FaFolder className="text-primary dark:text-accent w-4 h-4 mb-1" />
+                <span className="text-base font-bold text-secondary dark:text-textDark">{profile?.public_repos}</span>
+                <span className="text-[10px] uppercase font-bold text-mutedLight dark:text-mutedDark">Repos</span>
+              </div>
+              <div className="flex flex-col items-center border-x border-secondary-light/10 dark:border-white/5">
+                <FaUsers className="text-emerald-500 w-4 h-4 mb-1" />
+                <span className="text-base font-bold text-secondary dark:text-textDark">{profile?.followers}</span>
+                <span className="text-[10px] uppercase font-bold text-mutedLight dark:text-mutedDark">Followers</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <FaUsers className="text-amber-500 w-4 h-4 mb-1" />
+                <span className="text-base font-bold text-secondary dark:text-textDark">{profile?.following}</span>
+                <span className="text-[10px] uppercase font-bold text-mutedLight dark:text-mutedDark">Following</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Repositories list */}
+          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {repos.map((repo, idx) => (
+              <motion.div
+                key={repo.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="glass-card p-6 rounded-2xl border border-secondary-light/10 dark:border-white/5 shadow-sm flex flex-col justify-between h-full"
+              >
+                <div className="space-y-3">
+                  <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-base sm:text-lg font-bold font-outfit text-secondary dark:text-textDark hover:text-primary dark:hover:text-accent transition-colors flex items-center space-x-2"
+                  >
+                    <span className="truncate">{repo.name}</span>
+                  </a>
+                  <p className="text-xs sm:text-sm text-mutedLight dark:text-mutedDark line-clamp-3 leading-relaxed">
+                    {repo.description || 'No description provided.'}
+                  </p>
+                </div>
+
+                {/* Star / Languages Details */}
+                <div className="flex items-center justify-between pt-4 border-t border-secondary-light/10 dark:border-white/5 mt-4 text-xs font-semibold text-mutedLight dark:text-mutedDark">
+                  {repo.language && (
+                    <span className="flex items-center space-x-1.5">
+                      <FaCircle style={{ color: repo.languageColor }} className="w-2.5 h-2.5" />
+                      <span>{repo.language}</span>
+                    </span>
+                  )}
+                  <div className="flex items-center space-x-4">
+                    <span className="flex items-center space-x-1">
+                      <FaStar className="text-amber-500 w-3 h-3" />
+                      <span>{repo.stargazers_count}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <FaCodeBranch className="w-3 h-3" />
+                      <span>{repo.forks_count}</span>
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default GitHub;
