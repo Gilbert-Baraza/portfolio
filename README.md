@@ -8,7 +8,7 @@ Designed with a tech-inspired, minimalist aesthetic, this website features light
 
 ## 🚀 Live Demo & Repository
 - **Production Build (Vercel)**: [gilbert-baraza.vercel.app](https://gilbert-baraza.vercel.app)
-- **Source Code Repository**: [GitHub - GilbertBaraza/portfolio](https://github.com/GilbertBaraza/portfolio)
+- **Source Code Repository**: [GitHub - Gilbert-Baraza/portfolio](https://github.com/Gilbert-Baraza/portfolio)
 
 ---
 
@@ -67,7 +67,7 @@ Ensure you have **Node.js (v18.0.0 or higher)** and **npm** installed on your op
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/GilbertBaraza/portfolio.git
+   git clone https://github.com/Gilbert-Baraza/portfolio.git
    cd portfolio
    ```
 

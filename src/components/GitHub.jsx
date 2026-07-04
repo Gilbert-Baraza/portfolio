@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolder, FaCircle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-const GITHUB_USERNAME = 'GilbertBaraza';
+const GITHUB_USERNAME = 'Gilbert-Baraza';
 
 // Fallback Mock Data in case of rate limits or network issues
 const fallbackProfile = {
@@ -17,39 +17,30 @@ const fallbackProfile = {
 
 const fallbackRepos = [
   {
-    name: 'AgriGuard-AI',
-    description: 'AI-powered agriculture assistant for crop disease detection and smart farming recommendations.',
+    name: 'Kibu-market',
+    description: 'A dynamic e-commerce web platform for university students to buy and sell goods and services within the campus.',
+    language: 'Python',
+    stargazers_count: 8,
+    forks_count: 3,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Kibu-market`,
+    languageColor: '#3576AB'
+  },
+  {
+    name: 'House-Of-Bore',
+    description: 'A local rental management dashboard designed for landlords and property management systems.',
     language: 'Python',
     stargazers_count: 5,
     forks_count: 2,
-    html_url: `https://github.com/${GITHUB_USERNAME}/AgriGuard-AI`,
+    html_url: `https://github.com/${GITHUB_USERNAME}/House-Of-Bore`,
     languageColor: '#3576AB'
   },
   {
-    name: 'Adaa-AI-Planner',
-    description: 'AI planning assistant that converts user prompts into structured coding implementation plans.',
+    name: 'Hostel-Connect',
+    description: 'A hostel search, comparison, and booking platform mapping student housing facilities.',
     language: 'JavaScript',
     stargazers_count: 4,
     forks_count: 1,
-    html_url: `https://github.com/${GITHUB_USERNAME}/Adaa-AI-Planner`,
-    languageColor: '#f1e05a'
-  },
-  {
-    name: 'Student-Management-System',
-    description: 'Complete student record dashboard and CRUD platform designed with Python Django.',
-    language: 'Python',
-    stargazers_count: 3,
-    forks_count: 1,
-    html_url: `https://github.com/${GITHUB_USERNAME}/Student-Management-System`,
-    languageColor: '#3576AB'
-  },
-  {
-    name: 'portfolio',
-    description: 'The frontend source code of Gilbert Baraza\'s premium personal portfolio web application.',
-    language: 'JavaScript',
-    stargazers_count: 2,
-    forks_count: 0,
-    html_url: `https://github.com/${GITHUB_USERNAME}/portfolio`,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Hostel-Connect`,
     languageColor: '#f1e05a'
   }
 ];
@@ -78,24 +69,30 @@ const GitHub = () => {
         const profileRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
         if (!profileRes.ok) throw new Error('Failed to fetch profile');
         const profileData = await profileRes.json();
+
+        // Fetch specific featured repos concurrently
+        const featuredRepos = [
+          "Kibu-market",
+          "House-Of-Bore",
+          "Hostel-Connect",
+          "mental-health-risk-predictor"
+        ];
         
-        // Fetch repos
-        const reposRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
-        if (!reposRes.ok) throw new Error('Failed to fetch repos');
-        const reposData = await reposRes.json();
-
-        setProfile(profileData);
-        // Filter out fork repositories if they are fork to showcase original content, or take top 4
-        const originalRepos = reposData
-          .filter(repo => !repo.fork)
-          .slice(0, 4)
-          .map(repo => ({
-            ...repo,
-            languageColor: languageColors[repo.language?.toLowerCase()] || '#858585'
-          }));
-
-        setRepos(originalRepos.length > 0 ? originalRepos : reposData.slice(0, 4));
-        setError(false);
+        const reposData = await Promise.all(
+          featuredRepos.map(async (name) => {
+            const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${name}`);
+            if (!res.ok) throw new Error(`Failed to fetch repo ${name}`);
+            const repo = await res.json();
+            return {
+              ...repo,
+              languageColor: languageColors[repo.language?.toLowerCase()] || '#858585'
+            };
+          })
+        );
+ 
+         setProfile(profileData);
+         setRepos(reposData);
+         setError(false);
       } catch (err) {
         console.warn('GitHub API Fetch failed. Using fallback portfolio details. Error:', err.message);
         setProfile(fallbackProfile);
@@ -121,7 +118,7 @@ const GitHub = () => {
   return (
     <section id="github" className="py-20 bg-secondary-light/5 dark:bg-bgDark/40">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Section Heading */}
         <div className="text-center max-w-xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold font-outfit text-secondary dark:text-textDark">
@@ -135,9 +132,9 @@ const GitHub = () => {
 
         {/* Profile Card Summary */}
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          
+
           {/* Left Column: Profile Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -153,9 +150,9 @@ const GitHub = () => {
                 <h3 className="text-xl font-bold font-outfit text-secondary dark:text-textDark">
                   {profile?.name || GITHUB_USERNAME}
                 </h3>
-                <a 
-                  href={profile?.html_url} 
-                  target="_blank" 
+                <a
+                  href={`https://github.com/${GITHUB_USERNAME}`}
+                  target="_blank"
                   rel="noreferrer"
                   className="text-sm font-mono text-primary dark:text-accent hover:underline flex items-center justify-center lg:justify-start space-x-1.5 mt-1"
                 >

@@ -1,50 +1,85 @@
-// Project images will be imported here
 import agriguardImg from '../assets/projects/agriguard_ai.png';
+import kibumarket from "../assets/projects/kibumarket.png";
+import borefashionhub from "../assets/projects/borefashionhub.png";
+import hostelconnect from "../assets/projects/hostelconnect.png";
 import adaaImg from '../assets/projects/adaa_ai_planner.png';
 import studentImg from '../assets/projects/student_management_system.png';
 import portfolioImg from '../assets/projects/personal_portfolio.png';
 
 export const projectTags = ['All', 'AI', 'Backend', 'Web', 'Python'];
 
-export const projectsData = [
+// Local configurations matching Gilbert's actual GitHub repos
+export const projectsConfig = [
   {
     id: 1,
-    title: 'AgriGuard AI',
-    description: 'An AI-powered agriculture assistant designed to detect crop diseases from image uploads and provide optimal farming recommendations, including treatment schedules and weather advice.',
-    tech: ['Django', 'OpenAI API', 'PostgreSQL', 'Tailwind CSS', 'Docker'],
-    tags: ['AI', 'Backend', 'Python', 'Web'],
-    image: agriguardImg,
-    github: 'https://github.com/GilbertBaraza/AgriGuard-AI',
-    live: 'https://agriguard-ai.vercel.app'
+    repoName: 'Kibu-market',
+    image: kibumarket,
+    live: 'https://kibu-market-ten.vercel.app/',
+    tags: ['Backend', 'Web', 'Python']
   },
   {
     id: 2,
-    title: 'Adaa AI Planner',
-    description: 'An intelligent planning system that captures user requirements through prompts and automatically generates organized, step-by-step technical implementation plans, tasks, and system diagrams.',
-    tech: ['React', 'Framer Motion', 'Tailwind CSS', 'OpenAI API', 'Vite'],
-    tags: ['AI', 'Web'],
-    image: adaaImg,
-    github: 'https://github.com/GilbertBaraza/Adaa-AI-Planner',
-    live: 'https://adaa-ai-planner.vercel.app'
+    repoName: 'House-Of-Bore',
+    image: borefashionhub,
+    live: 'https://house-of-bore.vercel.app',
+    tags: ['Backend', 'Web', 'Python']
   },
   {
     id: 3,
-    title: 'Student Management System',
-    description: 'A comprehensive database management application that handles administrative student records, registrations, course details, grades, attendance tracking, and report generations.',
-    tech: ['Django', 'SQLite', 'Bootstrap', 'HTML5', 'CSS3'],
-    tags: ['Backend', 'Python', 'Web'],
-    image: studentImg,
-    github: 'https://github.com/GilbertBaraza/Student-Management-System',
-    live: 'https://student-sys.vercel.app'
+    repoName: 'Hostel-Connect',
+    image: hostelconnect,
+    live: 'https://hostel-connect.vercel.app',
+    tags: ['Web']
   },
   {
     id: 4,
-    title: 'Personal Portfolio',
-    description: 'Gilbert Baraza\'s personal portfolio website itself. Built with modern visual aesthetics, dark/light mode toggle, dynamic scroll animations, custom GitHub API integration, and an EmailJS-powered contact portal.',
-    tech: ['React', 'Vite', 'Tailwind CSS', 'Framer Motion', 'React Router'],
-    tags: ['Web'],
+    repoName: 'mental-health-risk-predictor',
     image: portfolioImg,
-    github: 'https://github.com/GilbertBaraza/portfolio',
-    live: 'https://gilbert-baraza.vercel.app'
+    live: 'https://mental-health-risk.vercel.app',
+    tags: ['AI', 'Python']
+  }
+];
+
+// Fallback data mapping Gilbert's actual GitHub repos
+export const fallbackProjectsData = [
+  {
+    id: 1,
+    title: 'Kibu Market',
+    description: 'A dynamic e-commerce web platform developed for Kibabii University students to buy, sell, and trade goods and services within the campus community.',
+    tech: ['Django', 'Python', 'SQLite', 'Tailwind CSS'],
+    tags: ['Backend', 'Web', 'Python'],
+    image: agriguardImg,
+    github: 'https://github.com/Gilbert-Baraza/Kibu-market',
+    live: 'https://kibu-market-nh6r.vercel.app/'
+  },
+  {
+    id: 2,
+    title: 'House Of Bore',
+    description: 'A comprehensive rental listings and housing management system designed to connect landlords and property agents with students seeking accommodation.',
+    tech: ['Django', 'Python', 'PostgreSQL', 'Tailwind CSS'],
+    tags: ['Backend', 'Web', 'Python'],
+    image: adaaImg,
+    github: 'https://github.com/Gilbert-Baraza/House-Of-Bore',
+    live: 'https://house-of-bore.vercel.app'
+  },
+  {
+    id: 3,
+    title: 'Hostel Connect',
+    description: 'An interactive booking system allowing university students to search, view details of, compare, and lease hostel rooms directly on campus.',
+    tech: ['React', 'JavaScript', 'Tailwind CSS', 'Vite'],
+    tags: ['Web'],
+    image: studentImg,
+    github: 'https://github.com/Gilbert-Baraza/Hostel-Connect',
+    live: 'https://hostel-connect.vercel.app'
+  },
+  {
+    id: 4,
+    title: 'Mental Health Risk Predictor',
+    description: 'A data science and machine learning dashboard utilizing risk factor datasets to predict mental health risk levels and present predictive metrics.',
+    tech: ['Python', 'Machine Learning', 'Pandas', 'Scikit-Learn'],
+    tags: ['AI', 'Python'],
+    image: portfolioImg,
+    github: 'https://github.com/Gilbert-Baraza/mental-health-risk-predictor',
+    live: 'https://mental-health-risk.vercel.app'
   }
 ];

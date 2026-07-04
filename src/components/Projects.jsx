@@ -1,14 +1,57 @@
-import React, { useState } from 'react';
-import { projectTags, projectsData } from '../data/projects';
+import React, { useState, useEffect } from 'react';
+import { projectTags, projectsConfig, fallbackProjectsData } from '../data/projects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const GITHUB_USERNAME = 'Gilbert-Baraza';
+
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [projects, setProjects] = useState(fallbackProjectsData);
+
+  useEffect(() => {
+    const fetchLiveProjectData = async () => {
+      try {
+        const syncedPromises = projectsConfig.map(async (config) => {
+          const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${config.repoName}`);
+          if (!res.ok) throw new Error(`Repo fetch failed for ${config.repoName}`);
+          const repo = await res.json();
+          
+          // Format name nicely (replace hyphens with spaces and capitalize)
+          const formattedTitle = repo.name
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, char => char.toUpperCase());
+
+          // Format topics (capitalize first letter of each topic)
+          const formattedTech = repo.topics && repo.topics.length > 0
+            ? repo.topics.map(topic => topic.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
+            : config.tags;
+
+          return {
+            id: config.id,
+            title: formattedTitle,
+            description: repo.description || 'No description provided.',
+            tech: formattedTech,
+            tags: config.tags,
+            image: config.image,
+            github: repo.html_url,
+            live: config.live
+          };
+        });
+
+        const syncedProjects = await Promise.all(syncedPromises);
+        setProjects(syncedProjects);
+      } catch (err) {
+        console.warn('Projects GitHub fetch failed. Retaining fallback static data:', err.message);
+      }
+    };
+
+    fetchLiveProjectData();
+  }, []);
 
   const filteredProjects = () => {
-    if (activeFilter === 'All') return projectsData;
-    return projectsData.filter(proj => proj.tags.includes(activeFilter));
+    if (activeFilter === 'All') return projects;
+    return projects.filter(proj => proj.tags.includes(activeFilter));
   };
 
   return (

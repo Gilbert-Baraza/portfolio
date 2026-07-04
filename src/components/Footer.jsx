@@ -52,7 +52,7 @@ const Footer = () => {
         <div className="flex flex-col items-center md:items-end space-y-4">
           <div className="flex space-x-4">
             <a 
-              href="https://github.com/GilbertBaraza" 
+              href="https://github.com/Gilbert-Baraza" 
               target="_blank" 
               rel="noreferrer"
               className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:border-primary dark:hover:border-accent hover:text-primary dark:hover:text-accent transition-all duration-200"
