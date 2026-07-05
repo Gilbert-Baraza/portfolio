@@ -1,48 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { projectTags, projectsConfig, fallbackProjectsData } from '../data/projects';
+import { projectTags, projectsConfig } from '../data/projects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const GITHUB_USERNAME = 'Gilbert-Baraza';
 
+// Inject PAT if present — raises rate limit from 60 to 5,000 req/hour
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const getGitHubHeaders = () => ({
+  Accept: "application/vnd.github+json",
+  "X-GitHub-Api-Version": "2022-11-28",
+  ...(GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` })
+});
+
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [projects, setProjects] = useState(fallbackProjectsData);
-
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   useEffect(() => {
+    const CACHE_KEY = 'portfolio_projects_cache_v2';
+
     const fetchLiveProjectData = async () => {
+      // Return cached data for this browser session to avoid rate limits
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) {
+        setProjects(JSON.parse(cached));
+        setLoading(false);
+        return;
+      }
+
       try {
-        const syncedPromises = projectsConfig.map(async (config) => {
-          const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${config.repoName}`);
-          if (!res.ok) throw new Error(`Repo fetch failed for ${config.repoName}`);
-          const repo = await res.json();
-          
-          // Format name nicely (replace hyphens with spaces and capitalize)
-          const formattedTitle = repo.name
-            .replace(/-/g, ' ')
-            .replace(/\b\w/g, char => char.toUpperCase());
+        const syncedProjects = await Promise.all(
+          projectsConfig.map(async (config) => {
+            try {
+              const repoResponse = await fetch(
+                `https://api.github.com/repos/${GITHUB_USERNAME}/${config.repoName}`,
+                { headers: getGitHubHeaders() }
+              );
 
-          // Format topics (capitalize first letter of each topic)
-          const formattedTech = repo.topics && repo.topics.length > 0
-            ? repo.topics.map(topic => topic.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
-            : config.tags;
+              if (!repoResponse.ok) {
+                throw new Error(`GitHub API ${repoResponse.status} for ${config.repoName}`);
+              }
 
-          return {
-            id: config.id,
-            title: formattedTitle,
-            description: repo.description || 'No description provided.',
-            tech: formattedTech,
-            tags: config.tags,
-            image: config.image,
-            github: repo.html_url,
-            live: config.live
-          };
-        });
+              const repo = await repoResponse.json();
 
-        const syncedProjects = await Promise.all(syncedPromises);
+              // Fetch languages
+              const languagesResponse = await fetch(repo.languages_url);
+              const languages = await languagesResponse.json();
+
+              return {
+                id: config.id,
+                title: repo.name
+                  .replace(/-/g, " ")
+                  .replace(/\b\w/g, c => c.toUpperCase()),
+                description: repo.description,
+                tech:
+                  repo.topics?.length > 0
+                    ? repo.topics.map(topic =>
+                        topic
+                          .replace(/-/g, " ")
+                          .replace(/\b\w/g, c => c.toUpperCase())
+                      )
+                    : Object.keys(languages),
+                tags: config.tags,
+                image: config.image,
+                github: repo.html_url,
+                live: config.live
+              };
+            } catch (repoErr) {
+              // Per-project fallback: use static config data instead of crashing
+              console.warn(`Using fallback for ${config.repoName}:`, repoErr.message);
+              return {
+                id: config.id,
+                title: config.fallback.title,
+                description: config.fallback.description,
+                tech: config.fallback.tech,
+                tags: config.tags,
+                image: config.image,
+                github: config.fallback.github,
+                live: config.live
+              };
+            }
+          })
+        );
+
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(syncedProjects));
         setProjects(syncedProjects);
       } catch (err) {
-        console.warn('Projects GitHub fetch failed. Retaining fallback static data:', err.message);
+        console.error(err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -53,11 +102,29 @@ const Projects = () => {
     if (activeFilter === 'All') return projects;
     return projects.filter(proj => proj.tags.includes(activeFilter));
   };
+  if (loading) {
+    return (
+      <section id="projects" className="py-20">
+        <div className="text-center">
+          Loading projects...
+        </div>
+      </section>
+    );
+  }
 
+  if (error) {
+    return (
+      <section id="projects" className="py-20">
+        <div className="text-center text-red-500">
+          {error}
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="projects" className="py-20 bg-secondary-light/5 dark:bg-bgDark/40">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Section Heading */}
         <div className="text-center max-w-xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold font-outfit text-secondary dark:text-textDark">
@@ -76,11 +143,10 @@ const Projects = () => {
               key={tag}
               onClick={() => setActiveFilter(tag)}
               type="button"
-              className={`px-5 py-2.5 rounded-xl text-sm font-semibold tracking-wide transition-all duration-200 ${
-                activeFilter === tag
-                  ? 'bg-primary dark:bg-accent text-white dark:text-secondary-dark shadow-md'
-                  : 'bg-secondary-light/10 dark:bg-white/5 border border-secondary-light/20 dark:border-white/10 text-textLight/70 dark:text-textDark/70 hover:bg-secondary-light/20 dark:hover:bg-white/10'
-              }`}
+              className={`px-5 py-2.5 rounded-xl text-sm font-semibold tracking-wide transition-all duration-200 ${activeFilter === tag
+                ? 'bg-primary dark:bg-accent text-white dark:text-secondary-dark shadow-md'
+                : 'bg-secondary-light/10 dark:bg-white/5 border border-secondary-light/20 dark:border-white/10 text-textLight/70 dark:text-textDark/70 hover:bg-secondary-light/20 dark:hover:bg-white/10'
+                }`}
             >
               {tag}
             </button>
@@ -88,7 +154,7 @@ const Projects = () => {
         </div>
 
         {/* Projects Grid */}
-        <motion.div 
+        <motion.div
           layout
           className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
         >

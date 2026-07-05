@@ -4,6 +4,14 @@ import { motion } from 'framer-motion';
 
 const GITHUB_USERNAME = 'Gilbert-Baraza';
 
+// Inject PAT if present — raises rate limit from 60 to 5,000 req/hour
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const getGitHubHeaders = () => ({
+  Accept: "application/vnd.github+json",
+  "X-GitHub-Api-Version": "2022-11-28",
+  ...(GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` })
+});
+
 // Fallback Mock Data in case of rate limits or network issues
 const fallbackProfile = {
   avatar_url: '/profile.png', // Gilbert's actual profile pic
@@ -62,11 +70,26 @@ const GitHub = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    const CACHE_KEY = 'portfolio_github_cache_v2';
+
     const fetchGitHubData = async () => {
+      // Return cached data for this browser session to avoid rate limits
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { profile: cachedProfile, repos: cachedRepos } = JSON.parse(cached);
+        setProfile(cachedProfile);
+        setRepos(cachedRepos);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         // Fetch profile
-        const profileRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+        const profileRes = await fetch(
+          `https://api.github.com/users/${GITHUB_USERNAME}`,
+          { headers: getGitHubHeaders() }
+        );
         if (!profileRes.ok) throw new Error('Failed to fetch profile');
         const profileData = await profileRes.json();
 
@@ -75,13 +98,16 @@ const GitHub = () => {
           "portfolio",
           "Kibu-market",
           "House-Of-Bore",
-          "Hostel-Connect",
+          "Hostels-Connect",
           "mental-health-risk-predictor"
         ];
 
         const reposData = await Promise.all(
           featuredRepos.map(async (name) => {
-            const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${name}`);
+            const res = await fetch(
+              `https://api.github.com/repos/${GITHUB_USERNAME}/${name}`,
+              { headers: getGitHubHeaders() }
+            );
             if (!res.ok) throw new Error(`Failed to fetch repo ${name}`);
             const repo = await res.json();
             return {
@@ -91,6 +117,7 @@ const GitHub = () => {
           })
         );
 
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ profile: profileData, repos: reposData }));
         setProfile(profileData);
         setRepos(reposData);
         setError(false);
