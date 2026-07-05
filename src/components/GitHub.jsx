@@ -72,12 +72,13 @@ const GitHub = () => {
 
         // Fetch specific featured repos concurrently
         const featuredRepos = [
+          "portfolio",
           "Kibu-market",
           "House-Of-Bore",
           "Hostel-Connect",
           "mental-health-risk-predictor"
         ];
-        
+
         const reposData = await Promise.all(
           featuredRepos.map(async (name) => {
             const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${name}`);
@@ -89,10 +90,10 @@ const GitHub = () => {
             };
           })
         );
- 
-         setProfile(profileData);
-         setRepos(reposData);
-         setError(false);
+
+        setProfile(profileData);
+        setRepos(reposData);
+        setError(false);
       } catch (err) {
         console.warn('GitHub API Fetch failed. Using fallback portfolio details. Error:', err.message);
         setProfile(fallbackProfile);
