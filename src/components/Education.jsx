@@ -49,7 +49,6 @@ const Education = () => {
                   <div className="text-base sm:text-lg font-semibold text-textLight/80 dark:text-textDark/80 flex items-center space-x-2">
                     <span>{edu.institution}</span>
                     <span className="text-textLight/40 dark:text-textDark/40">|</span>
-                    <span className="text-emerald-500 font-bold">{edu.gpa}</span>
                   </div>
                 </div>
 

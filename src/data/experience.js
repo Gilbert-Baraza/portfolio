@@ -3,7 +3,7 @@ export const experienceData = [
     role: 'Freelance Software Developer',
     company: 'Self-Employed',
     period: '2024 - Present',
-    type: 'Freelance',
+    type: 'None',
     description: 'Developing responsive web interfaces, designing custom APIs, and automating backend systems for small businesses and clients.',
     bullets: [
       'Built a custom booking platform using Django and SQLite, improving appointment scheduling efficiency by 30%.',
@@ -15,7 +15,7 @@ export const experienceData = [
     role: 'Open Source Contributor',
     company: 'GitHub Community',
     period: '2024 - Present',
-    type: 'Open Source',
+    type: 'None',
     description: 'Actively contributing code, bug fixes, and documentation improvements to Python-based open-source projects and developer utilities.',
     bullets: [
       'Contributed documentation refinements and minor bug fixes in Django-related packages.',
@@ -27,7 +27,7 @@ export const experienceData = [
     role: 'Lead Project Developer',
     company: 'University Academic Projects',
     period: '2024',
-    type: 'Academic',
+    type: 'None',
     description: 'Led a small student team to construct, present, and document core computer science assignments and group designs.',
     bullets: [
       'Spearheaded the software architecture of the Student Management System CRUD application in Django.',

@@ -12,8 +12,8 @@ const getGitHubHeaders = () => ({
   ...(GITHUB_TOKEN && { Authorization: `Bearer ${GITHUB_TOKEN}` })
 });
 
-// Fallback Mock Data in case of rate limits or network issues
-const fallbackProfile = {
+// Fallback  Data in case of rate limits or network issues
+ const fallbackProfile = {
   avatar_url: '/profile.png', // Gilbert's actual profile pic
   name: 'Gilbert Baraza',
   bio: 'Computer Science Student | Backend Developer | AI & Web Development',
@@ -21,9 +21,9 @@ const fallbackProfile = {
   followers: 12,
   following: 15,
   html_url: `https://github.com/${GITHUB_USERNAME}`
-};
+}; 
 
-const fallbackRepos = [
+ const fallbackRepos = [
   {
     name: 'Kibu-market',
     description: 'A dynamic e-commerce web platform for university students to buy and sell goods and services within the campus.',
@@ -52,7 +52,7 @@ const fallbackRepos = [
     languageColor: '#f1e05a'
   }
 ];
-
+ 
 const languageColors = {
   python: '#3576AB',
   javascript: '#f1e05a',
@@ -95,7 +95,7 @@ const GitHub = () => {
 
         // Fetch specific featured repos concurrently
         const featuredRepos = [
-          "portfolio",
+          "job_board",
           "Kibu-market",
           "House-Of-Bore",
           "Hostels-Connect",
@@ -189,7 +189,7 @@ const GitHub = () => {
                 </a>
               </div>
               <p className="text-xs md:text-sm text-mutedLight dark:text-mutedDark leading-relaxed">
-                {profile?.bio || fallbackProfile.bio}
+                {profile?.bio}
               </p>
             </div>
 

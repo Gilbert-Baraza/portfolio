@@ -13,7 +13,7 @@ const timelineData = [
   {
     year: '2024',
     title: 'Started Programming Journey',
-    description: 'Began programming with C and C++, started learning web development with HTML and CSS fundamentals'
+    description: 'Began programming with C and C++, started learning web development with HTML and CSS  fundamentals'
   },
   {
     year: '2024',
@@ -32,13 +32,18 @@ const timelineData = [
   },
   {
     year: '2026',
+    title: 'Adopt JavaScript Express Framework',
+    description: 'Transitioned to web systems backend architectures. Designed databases, CRUD servers, and APIs with Express.'
+  },
+  {
+    year: '2026',
     title: 'Exploring Artificial Intelligence and Machine Learning',
     description: 'Exploring OpenAI APIs, experimenting with machine learning tools and libraries'
   },
   {
     year: '2026 - Present',
     title: 'Computer Science Student & Attachment Seeking',
-    description: 'Deepening core concepts in Software Engineering, Networks at University while seeking an industrial attachment.'
+    description: 'Deepening core concepts in Software Engineering at University while seeking an industrial attachment.'
   }
 ];
 

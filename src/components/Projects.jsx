@@ -23,12 +23,12 @@ const Projects = () => {
 
     const fetchLiveProjectData = async () => {
       // Return cached data for this browser session to avoid rate limits
-      const cached = sessionStorage.getItem(CACHE_KEY);
+     /*  const cached = sessionStorage.getItem(CACHE_KEY);
       if (cached) {
         setProjects(JSON.parse(cached));
         setLoading(false);
         return;
-      }
+      } */
 
       try {
         const syncedProjects = await Promise.all(
@@ -44,7 +44,7 @@ const Projects = () => {
               }
 
               const repo = await repoResponse.json();
-
+             
               // Fetch languages
               const languagesResponse = await fetch(repo.languages_url);
               const languages = await languagesResponse.json();
@@ -66,7 +66,7 @@ const Projects = () => {
                 tags: config.tags,
                 image: config.image,
                 github: repo.html_url,
-                live: config.live
+                live: config.live,
               };
             } catch (repoErr) {
               // Per-project fallback: use static config data instead of crashing

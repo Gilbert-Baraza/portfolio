@@ -109,8 +109,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <div className="text-xs font-bold text-mutedLight dark:text-mutedDark uppercase tracking-wider">Email</div>
-                    <a href="mailto:gilbertbaraza@example.com" className="text-sm font-semibold text-secondary dark:text-textDark hover:text-primary dark:hover:text-accent">
-                      gilbertbaraza@example.com
+                    <a href="mailto:barazagilbert4@gmail.com" className="text-sm font-semibold text-secondary dark:text-textDark hover:text-primary dark:hover:text-accent">
+                      barazagilbert4@gmail.com
                     </a>
                   </div>
                 </div>
@@ -121,8 +121,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <div className="text-xs font-bold text-mutedLight dark:text-mutedDark uppercase tracking-wider">Phone</div>
-                    <a href="tel:+254700000000" className="text-sm font-semibold text-secondary dark:text-textDark hover:text-emerald-500">
-                      +254 700 000 000
+                    <a href="tel:+254705049184" className="text-sm font-semibold text-secondary dark:text-textDark hover:text-emerald-500">
+                      +254 705049184
                     </a>
                   </div>
                 </div>
@@ -141,20 +141,6 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Google Map Mock/Placeholder */}
-            <div className="glass-card rounded-3xl border border-secondary-light/10 dark:border-white/5 overflow-hidden flex-grow min-h-[220px] relative">
-              <iframe
-                title="Location Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127642.82528773956!2d36.75485633857422!3d-1.2863892000000004!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7eb02f6b1d6217d!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
-                width="100%"
-                height="100%"
-                style={{ border: 0, filter: 'grayscale(1) contrast(1.2) opacity(0.85)' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 w-full h-full"
-              />
-            </div>
           </motion.div>
 
           {/* Right Side: Contact Form */}
@@ -178,7 +164,7 @@ const Contact = () => {
                     className={`w-full bg-secondary-light/5 dark:bg-bgDark/50 border ${
                       errors.name ? 'border-red-500' : 'border-secondary-light/20 dark:border-white/10'
                     } focus:border-primary dark:focus:border-accent rounded-xl py-3 px-4 text-sm font-semibold outline-none transition-colors`}
-                    placeholder="John Doe"
+                    
                   />
                   {errors.name && <span className="text-xs text-red-500 font-bold">{errors.name}</span>}
                 </div>
@@ -195,7 +181,6 @@ const Contact = () => {
                     className={`w-full bg-secondary-light/5 dark:bg-bgDark/50 border ${
                       errors.email ? 'border-red-500' : 'border-secondary-light/20 dark:border-white/10'
                     } focus:border-primary dark:focus:border-accent rounded-xl py-3 px-4 text-sm font-semibold outline-none transition-colors`}
-                    placeholder="john@example.com"
                   />
                   {errors.email && <span className="text-xs text-red-500 font-bold">{errors.email}</span>}
                 </div>
@@ -213,7 +198,7 @@ const Contact = () => {
                   className={`w-full bg-secondary-light/5 dark:bg-bgDark/50 border ${
                     errors.subject ? 'border-red-500' : 'border-secondary-light/20 dark:border-white/10'
                   } focus:border-primary dark:focus:border-accent rounded-xl py-3 px-4 text-sm font-semibold outline-none transition-colors`}
-                  placeholder="Industrial Attachment Opportunity"
+                  
                 />
                 {errors.subject && <span className="text-xs text-red-500 font-bold">{errors.subject}</span>}
               </div>
@@ -230,7 +215,7 @@ const Contact = () => {
                   className={`w-full bg-secondary-light/5 dark:bg-bgDark/50 border ${
                     errors.message ? 'border-red-500' : 'border-secondary-light/20 dark:border-white/10'
                   } focus:border-primary dark:focus:border-accent rounded-xl py-3 px-4 text-sm font-semibold outline-none transition-colors resize-none`}
-                  placeholder="Hi Gilbert, I would like to discuss..."
+                  
                 />
                 {errors.message && <span className="text-xs text-red-500 font-bold">{errors.message}</span>}
               </div>
@@ -252,7 +237,7 @@ const Contact = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-xl text-center text-sm font-bold"
                 >
-                  🎉 Thank you! Your message has been sent successfully.
+                  Thank you! Your message has been sent successfully.
                 </motion.div>
               )}
               {status === 'error' && (

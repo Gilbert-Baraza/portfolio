@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 const titles = [
   'Computer Science Student',
   'Backend Developer',
-  'AI & Web Developer'
+  'Web Developer'
 ];
 
 const Hero = () => {
@@ -159,7 +159,7 @@ const Hero = () => {
               <FaLinkedin className="w-7 h-7" />
             </a>
             <a
-              href="mailto:barazagilbert4@gmail.com"
+              href="#contact"
               className="text-textLight/60 dark:text-textDark/60 hover:text-primary dark:hover:text-accent transition-colors duration-200"
               aria-label="Email"
             >
